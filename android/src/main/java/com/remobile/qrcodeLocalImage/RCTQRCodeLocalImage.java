@@ -30,7 +30,7 @@ public class RCTQRCodeLocalImage extends ReactContextBaseJavaModule {
 
     public RCTQRCodeLocalImage(ReactApplicationContext reactContext) {
         super(reactContext);
-        this.context = context;
+        this.context = reactContext;
     }
 
     @Override
@@ -50,9 +50,9 @@ public class RCTQRCodeLocalImage extends ReactContextBaseJavaModule {
         Bitmap scanBitmap = null;
         if (path.startsWith("http://")||path.startsWith("https://")) {
             scanBitmap = getbitmap(path);
-        } else if (path.startsWith("content://")) {
+        } else if (path.startsWith("content://") || path.startsWith("file://")) {
             try {
-                final Uri imagePath = Uri.parse(path.replace("file://", "").replace("file:/", ""));
+                final Uri imagePath = Uri.parse(path);
                 InputStream inputStream = this.context.getContentResolver().openInputStream(imagePath);
                 if (inputStream != null) {
                     scanBitmap = BitmapFactory.decodeStream(inputStream, null, options);
